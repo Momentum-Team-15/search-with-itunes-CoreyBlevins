@@ -1,8 +1,8 @@
-let submitButton = document.querySelector('#submitButton');
-let searchInput = document.querySelector('#searchField');
-let form = document.querySelector('#form');
+let form = document.getElementById('form');
+let searchInput = document.getElementById('searchField');
+let submitButton = document.getElementById('submitButton');
 let resultsAudio = document.getElementById('audio');
-let results = document.getElementById('results');
+let resultField = document.getElementById('results');
 
 form.addEventListener("submit", event => {
     event.preventDefault();
@@ -15,11 +15,11 @@ form.addEventListener("submit", event => {
         .then(function (response) {
             return response.json();
         })
-        .then(function (musicData) {
-            results.innerText = '';
-            console.log(musicData.results);
-            buildGrid(musicData.results);
-            if (musicData.results.length === 0){
+        .then(function (songData) {
+            resultField.innerText = '';
+            console.log(songData.results);
+            buildGrid(songData.results);
+            if (songData.results.length === 0) {
                 buildTryAgain();
             }
         })
@@ -28,32 +28,32 @@ form.addEventListener("submit", event => {
 function buildGrid(showResults) {
     for (let info of showResults) {
         let resultsDiv = document.createElement('div');
-        let resultsPic = document.createElement('img');
-        let wordsBox = document.createElement('div');
+        let resultsImage = document.createElement('img');
+        let wordBox = document.createElement('div');
         let artistNameDisplay = document.createElement('p');
-        let resultsName = document.createElement('h5');
+        let resultsArtist = document.createElement('h5');
         let songNameDisplay = document.createElement('p');
         let resultsSong = document.createElement('h5');
         let buttonBox = document.createElement('div');
         let audioButton = document.createElement('button');
         let pauseButton = document.createElement('button');
 
-        resultsPic.src = `${info.artworkUrl100}`;
+        resultsImage.src = `${info.artworkUrl100}`;
         artistNameDisplay.innerText = `Artist name:`
-        resultsName.innerText = `${info.artistName}`;
+        resultsArtist.innerText = `${info.artistName}`;
         songNameDisplay.innerText = `Song title:`
         resultsSong.innerText = `${info.trackName}`;
         audioButton.innerText = `play preview`;
         pauseButton.innerText = `pause preview`;
 
         resultsDiv.classList.add('resultBox');
-        wordsBox.classList.add('wordsBox');
-        resultsPic.classList.add('resultImage');
-        resultsName.classList.add('resultName');
-        resultsSong.classList.add('resultTrack');
+        wordBox.classList.add('wordBox');
+        resultsImage.classList.add('resultImage');
+        resultsArtist.classList.add('resultArtist');
+        resultsSong.classList.add('resultSong');
         buttonBox.classList.add('buttonBox');
-        audioButton.classList.add('resultPreview');
-        pauseButton.classList.add('previewPause');
+        audioButton.classList.add('audioPlay');
+        pauseButton.classList.add('audioPause');
 
         audioButton.addEventListener('click', event => {
             resultsAudio.src = "";
@@ -65,16 +65,16 @@ function buildGrid(showResults) {
                 resultsAudio.pause();
             }
         })
-        resultsDiv.appendChild(resultsPic);
-        resultsDiv.appendChild(wordsBox);
-        wordsBox.appendChild(artistNameDisplay);
-        wordsBox.appendChild(resultsName);
-        wordsBox.appendChild(songNameDisplay);
-        wordsBox.appendChild(resultsSong);
+        resultsDiv.appendChild(resultsImage);
+        resultsDiv.appendChild(wordBox);
+        wordBox.appendChild(artistNameDisplay);
+        wordBox.appendChild(resultsArtist);
+        wordBox.appendChild(songNameDisplay);
+        wordBox.appendChild(resultsSong);
         resultsDiv.appendChild(buttonBox);
         buttonBox.appendChild(audioButton);
         buttonBox.appendChild(pauseButton);
-        results.appendChild(resultsDiv);
+        resultField.appendChild(resultsDiv);
     }
 }
 function buildTryAgain() {
@@ -86,6 +86,6 @@ function buildTryAgain() {
     tryAgainText.innerText = `Sorry, no results. Try again.`;
 
     tryAgainDiv.appendChild(tryAgainText);
-    results.appendChild(tryAgainDiv);
+    resultField.appendChild(tryAgainDiv);
 
 }

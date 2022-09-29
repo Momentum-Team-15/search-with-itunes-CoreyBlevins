@@ -56,26 +56,26 @@ body {
     object-fit: cover;
     border: 1px solid #000000;
 }
-.wordsBox {
+.wordBox {
     width: 400px;
     padding-left: 15px;
     margin: 0;
 }
-.resultName{
+.resultArtist{
 margin-top: -10px;
 }
-.resultTrack{
+.resultSong{
 margin-top: -10px;
 }
 .buttonBox {
     display: flex;
     flex-direction: column;
 }
-.resultPreview {
+.audioPlay {
     height: 50%;
     background: #fca311;
 }
-.previewPause {
+.audioPause {
     height: 50%;
     background: #fca311;
 }
