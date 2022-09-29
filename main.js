@@ -1,20 +1,42 @@
-const submitButton = document.querySelector('#submitButton');
+let submitButton = document.querySelector('#submitButton');
 let searchInput = document.querySelector('#searchField');
 let form = document.querySelector('#form');
 let resultsAudio = document.getElementById('audio');
 let results = document.getElementById('results');
 
+form.addEventListener("submit", event => {
+    event.preventDefault();
+
+    searchRequest = searchInput.value;
+    url = `https://itunes.apple.com/search?term=${searchRequest}&entity=song&limit=30`;
+
+    fetch(url, {
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (musicData) {
+            results.innerText = '';
+            console.log(musicData.results);
+            buildGrid(musicData.results);
+            if (musicData.results.length === 0){
+                buildTryAgain();
+            }
+        })
+})
 
 function buildGrid(showResults) {
     for (let info of showResults) {
         let resultsDiv = document.createElement('div');
         let resultsPic = document.createElement('img');
         let wordsBox = document.createElement('div');
-        let artistNameDisplay= document.createElement('p');
+        let artistNameDisplay = document.createElement('p');
         let resultsName = document.createElement('h5');
-        let songNameDisplay= document.createElement('p');
+        let songNameDisplay = document.createElement('p');
         let resultsSong = document.createElement('h5');
+        let buttonBox = document.createElement('div');
         let audioButton = document.createElement('button');
+        let pauseButton = document.createElement('button');
 
         resultsPic.src = `${info.artworkUrl100}`;
         artistNameDisplay.innerText = `Artist name:`
@@ -22,45 +44,48 @@ function buildGrid(showResults) {
         songNameDisplay.innerText = `Song title:`
         resultsSong.innerText = `${info.trackName}`;
         audioButton.innerText = `play preview`;
+        pauseButton.innerText = `pause preview`;
 
         resultsDiv.classList.add('resultBox');
         wordsBox.classList.add('wordsBox');
         resultsPic.classList.add('resultImage');
         resultsName.classList.add('resultName');
         resultsSong.classList.add('resultTrack');
-        audioButton.classList.add('resultPrev');
-    
-    audioButton.addEventListener('click', event => {
-        resultsAudio.src = "";
-        resultsAudio.src = `${info.previewUrl}`;
-        resultsAudio.volume = 0.1;
-    })
+        buttonBox.classList.add('buttonBox');
+        audioButton.classList.add('resultPreview');
+        pauseButton.classList.add('previewPause');
 
-    resultsDiv.appendChild(resultsPic);
-    resultsDiv.appendChild(wordsBox);
-    wordsBox.appendChild(artistNameDisplay);
-    wordsBox.appendChild(resultsName);
-    wordsBox.appendChild(songNameDisplay);
-    wordsBox.appendChild(resultsSong);
-    resultsDiv.appendChild(audioButton);
-    results.appendChild(resultsDiv);
-}
-}
-
-form.addEventListener("submit", event => {
-    event.preventDefault();
-
-    searchRequest = searchInput.value
-    url = `https://itunes.apple.com/search?term=${searchRequest}&entity=song&limit=20`;
-
-    fetch(url, {
-    })
-        .then(function (response) {
-            return response.json()
+        audioButton.addEventListener('click', event => {
+            resultsAudio.src = "";
+            resultsAudio.src = `${info.previewUrl}`;
+            resultsAudio.volume = 0.1;
         })
-        .then(function (musicData) {
-            results.innerText = '';
-            console.log(musicData.results)
-            buildGrid(musicData.results);
+        pauseButton.addEventListener('click', event => {
+            for (let i = 0; i < 30; i++) {
+                resultsAudio.pause();
+            }
         })
-})
+        resultsDiv.appendChild(resultsPic);
+        resultsDiv.appendChild(wordsBox);
+        wordsBox.appendChild(artistNameDisplay);
+        wordsBox.appendChild(resultsName);
+        wordsBox.appendChild(songNameDisplay);
+        wordsBox.appendChild(resultsSong);
+        resultsDiv.appendChild(buttonBox);
+        buttonBox.appendChild(audioButton);
+        buttonBox.appendChild(pauseButton);
+        results.appendChild(resultsDiv);
+    }
+}
+function buildTryAgain() {
+    let tryAgainDiv = document.createElement('div');
+    let tryAgainText = document.createElement('h3');
+
+    tryAgainDiv.classList.add('tryAgainDiv');
+
+    tryAgainText.innerText = `Sorry, no results. Try again.`;
+
+    tryAgainDiv.appendChild(tryAgainText);
+    results.appendChild(tryAgainDiv);
+
+}
